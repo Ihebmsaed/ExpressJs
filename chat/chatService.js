@@ -1,5 +1,6 @@
 var Chat = require('./chatModel')
 var socketIo = require('socket.io')
+var ordinateurModel = require('../ordinateur/ordinateurModel')
 
 function socketIO(server){
     const io = socketIo(server)
@@ -26,8 +27,26 @@ function socketIO(server){
             console.log('wini data'+msgs);
             io.emit('msgList',msgs)
                       
-        }
-        )})
+        })
+        socket.on('display-ord', async (categorie) => {
+            try {
+                let ords;
+                if (categorie) {
+                    
+                    ords = await ordinateurModel.find({ categorie });
+                    console.log(`Data found for category "${categorie}":`, ords);
+                } else {
+                    
+                    ords = await ordinateurModel.find();
+                    console.log('All data:', ords);
+                }
+                io.emit('ordList', ords); 
+            } catch (error) {
+                console.error('Error fetching data:', error.message);
+                io.emit('error', { message: 'Failed to fetch data' }); 
+            }
+        });
+    })
     return io;
 }
 

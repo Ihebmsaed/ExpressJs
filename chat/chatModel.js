@@ -4,4 +4,4 @@ var Chat = new Schema({
     msg : String,
     date : Date,
 })
-module.exports = mongoose.model('chats', Chat)
+module.exports = mongoose.model('chats', Chat) 
