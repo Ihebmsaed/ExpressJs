@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Bonjour</h1>  
+
+   <input type="text" id="msg" placeholder="message">
+    <button onclick="sendMsg()">send</button>
+ <button onclick="displayMsg()">display</button>
+  <script>
+  var name= prompt('Enter your name')
+  var socket = io();
+  socket.on('msg',(data)=>{
+    console.log(data)
+    var p = document.createElement('p')
+    p.innerText= data
+    document.body.append(p)
+  })
+
+  function sendMsg(){
+    
+    var msg  =document.getElementById('msg').value
+    console.log(msg)
+   // socket.emit('msg',msg)
+    
+    var data = {name:name,msg:msg}
+    socket.emit('msg',data)
+
+  }
+
+  function displayMsg(){
+    socket.emit('display-msg','Afficher les messages')
+  }
+
+  socket.on('msgList',(data)=>{
+    console.log(data)
+    for(var i=0;i<data.length;i++){
+      var p = document.createElement('p')
+      p.innerText= data[i].name + ' : ' + data[i].msg
+      document.body.append(p)
+    }
+  })
+  </script>
+</body>
+</html>
